@@ -1,30 +1,11 @@
+
+# Create your tests here.
 from django.test import TestCase
 from django.contrib.auth.models import User
+from blogging.models import Post
 from blogging.models import Category
-import datetime                          # Add this import
-from django.utils.timezone import utc    # Add this import
-
-class PostTestCase(TestCase):
-    fixtures = ['blogging_test_fixture.json', ]
-
-    def setUp(self):
-        self.user = User.objects.get(pk=1)
-
-     # add this test method to the PostTestCase
-    def test_string_representation(self):
-        expected = "This is a title"
-        p1 = Post(title=expected)
-        actual = str(p1)
-        self.assertEqual(expected, actual)
-
-# and the test case and test
-class CategoryTestCase(TestCase):
-
-    def test_string_representation(self):
-        expected = "A Category"
-        c1 = Category(name=expected)
-        actual = str(c1)
-        self.assertEqual(expected, actual)
+import datetime
+from django.utils.timezone import utc
 
 
 class FrontEndTestCase(TestCase):
@@ -45,8 +26,6 @@ class FrontEndTestCase(TestCase):
                 post.published_date = pubdate
             post.save()
 
-class FrontEndTestCase(TestCase): # already here
-    # ...
     def test_list_only_published(self):
         resp = self.client.get('/')
         # the content of the rendered response is always a bytestring
@@ -69,3 +48,24 @@ class FrontEndTestCase(TestCase): # already here
                 self.assertContains(resp, title)
             else:
                 self.assertEqual(resp.status_code, 404)
+
+class PostTestCase(TestCase):
+    fixtures = ['blogging_test_fixture.json', ]
+
+    def test_string_representation(self):
+        expected = "This is a title"
+        p1 = Post(title=expected)
+        actual = str(p1)
+        self.assertEqual(expected, actual)
+
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+
+
+class CategoryTestCase(TestCase):
+
+    def test_string_representation(self):
+        expected = "A Category"
+        c1 = Category(name=expected)
+        actual = str(c1)
+        self.assertEqual(expected, actual)
